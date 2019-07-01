@@ -11,16 +11,25 @@ import com.example.boris.mapgame.models.LocationModel;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class RecyclerMainAdapter extends RecyclerView.Adapter<RecyclerMainAdapter.MyHolder> {
 
     private List<LocationModel> locationModels;
     private MainActivity mainActivity;
+    private ConstraintLayout.LayoutParams layoutParams;
 
     public RecyclerMainAdapter(List<LocationModel> locationModels, MainActivity mainActivity) {
         this.locationModels = locationModels;
         this.mainActivity = mainActivity;
+
+        layoutParams = new ConstraintLayout.LayoutParams(200, 200);
+        layoutParams.leftMargin = 10;
+        layoutParams.rightMargin = 10;
+        layoutParams.bottomMargin = 10;
+        layoutParams.topMargin = 10;
     }
 
     @NonNull
@@ -32,7 +41,7 @@ public class RecyclerMainAdapter extends RecyclerView.Adapter<RecyclerMainAdapte
 
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, int position) {
-
+        holder.layout.setLayoutParams(layoutParams);
     }
 
     @Override
@@ -40,10 +49,24 @@ public class RecyclerMainAdapter extends RecyclerView.Adapter<RecyclerMainAdapte
         return locationModels.size();
     }
 
-    public class MyHolder extends RecyclerView.ViewHolder{
+    public void setNewSize(int size){
+        layoutParams.height = layoutParams.height + size;
+        layoutParams.width = layoutParams.width + size;
+        layoutParams.leftMargin = 10;
+        layoutParams.rightMargin = 10;
+        layoutParams.bottomMargin = 10;
+        layoutParams.topMargin = 10;
 
+        notifyDataSetChanged();
+    }
+
+
+
+    public class MyHolder extends RecyclerView.ViewHolder{
+        public ConstraintLayout layout;
         public MyHolder(@NonNull View itemView) {
             super(itemView);
+            layout = itemView.findViewById(R.id.recycleItemMain);
         }
     }
 }

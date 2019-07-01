@@ -4,6 +4,7 @@
     android:layout_width="100dp"
     android:layout_height="100dp"
     android:background="@color/colorPrimaryDark"
-    android:layout_margin="10dp">
+    android:layout_margin="10dp"
+    android:id="@+id/recycleItemMain">
 
 </androidx.constraintlayout.widget.ConstraintLayout>
