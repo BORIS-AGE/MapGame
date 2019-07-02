@@ -9,7 +9,6 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
-import android.view.animation.ScaleAnimation;
 import android.widget.HorizontalScrollView;
 import android.widget.ScrollView;
 import android.widget.Toast;
@@ -21,14 +20,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    public enum Location{ROCK, WALL, FOREST, RIVER, PIT, ARSENAL, TREASURE, SAND, EXIT}
+    public enum Location{ROCK, FOREST, RIVER, ARSENAL, TREASURE, SAND, EXIT, PIT1, PIT2, PIT3, PIT4, PIT5, PIT6}
     public enum Mode{NORMAL, MODE1, MODE2, MODE3}
+    public Location[][] map = {
+            {Location.FOREST, Location.FOREST, Location.FOREST, Location.FOREST, Location.SAND, Location.SAND, Location.RIVER},
+            {Location.SAND, Location.SAND, Location.FOREST, Location.SAND, Location.RIVER, Location.RIVER, Location.RIVER},
+            {Location.SAND, Location.FOREST, Location.SAND, Location.SAND, Location.RIVER, Location.SAND, Location.FOREST},
+            {Location.PIT1, Location.SAND, Location.RIVER, Location.RIVER, Location.RIVER, Location.SAND, Location.FOREST},
+            {Location.SAND, Location.SAND, Location.RIVER, Location.TREASURE, Location.ROCK, Location.SAND, Location.ARSENAL},
+            {Location.RIVER, Location.RIVER, Location.RIVER, Location.ROCK, Location.SAND, Location.SAND, Location.FOREST},
+            {Location.RIVER, Location.SAND, Location.SAND, Location.FOREST, Location.FOREST, Location.EXIT, Location.PIT1}
+    };
 
     private ScaleGestureDetector mScaleGestureDetector;
     private GestureDetector gestureDetector;
     private RecyclerView mainRecycler;
     private List<LocationModel> locationModels;
     private RecyclerMainAdapter recyclerMainAdapter;
+    public int lenthOfMAp = 7;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void setRecyclerMain() {
-        mainRecycler.setLayoutManager(new GridLayoutManager(this, 15));
+        mainRecycler.setLayoutManager(new GridLayoutManager(this, lenthOfMAp));
         recyclerMainAdapter = new RecyclerMainAdapter(locationModels, this);
         mainRecycler.setHasFixedSize(true);
         mainRecycler.setAdapter(recyclerMainAdapter);
@@ -51,11 +60,14 @@ public class MainActivity extends AppCompatActivity {
     private void setDefaults(){
         mainRecycler = findViewById(R.id.mainRecycler);
         locationModels = new ArrayList<>();
-        for (int i = 0; i < 500; i++) {
-            locationModels.add(new LocationModel(Location.ARSENAL));
+        for (Location[] area : map) {
+            for (Location l : area){
+                locationModels.add(new LocationModel(l));
+            }
         }
     }
     private void setScrollView() {
+        //for moving ability
         final HorizontalScrollView hScroll = findViewById(R.id.scrollHorizontal);
         final ScrollView vScroll = findViewById(R.id.scrollVertical);
         vScroll.setOnTouchListener(new View.OnTouchListener() {
@@ -95,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //for scaling ability
         gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onDown(MotionEvent e) {
@@ -110,18 +123,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onScale(ScaleGestureDetector detector) {
                 float scale = detector.getScaleFactor() - 1;
-                //float prevScale = mScale;
-                //mScale += scale;
 
                 if (scale > 0)
                     recyclerMainAdapter.setNewSize(5);
                 else
                     recyclerMainAdapter.setNewSize(-5);
-
-                /*ScaleAnimation scaleAnimation = new ScaleAnimation(1f / prevScale, 1f / mScale, 1f / prevScale, 1f / mScale, detector.getFocusX(), detector.getFocusY());
-                scaleAnimation.setDuration(0);
-                scaleAnimation.setFillAfter(true);
-                hScroll.startAnimation(scaleAnimation);*/
                 return true;
             }
         });
@@ -139,6 +145,24 @@ public class MainActivity extends AppCompatActivity {
 
     public void makeErrorNotification(String exception){
         System.out.println(exception);
-        Toast.makeText(getApplicationContext(), exception, Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), exception, Toast.LENGTH_SHORT).show();
+    }
+
+    public void playerMove(View view) {
+        if (recyclerMainAdapter.player.isOnMap())
+        switch (view.getId()){
+            case R.id.buttonUp:
+                recyclerMainAdapter.moveUp();
+                break;
+            case R.id.buttonDown:
+                recyclerMainAdapter.moveDown();
+                break;
+            case R.id.buttonLeft:
+                recyclerMainAdapter.moveLeft();
+                break;
+            case R.id.buttonRight:
+                recyclerMainAdapter.moveRight();
+                break;
+        }
     }
 }
