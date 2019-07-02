@@ -1,6 +1,7 @@
 package com.example.boris.mapgame;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private List<LocationModel> locationModels;
     private RecyclerMainAdapter recyclerMainAdapter;
     public int lenthOfMAp = 7;
+    public ConstraintLayout mainLay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setDefaults(){
+        mainLay = findViewById(R.id.mainLayout);
         mainRecycler = findViewById(R.id.mainRecycler);
         locationModels = new ArrayList<>();
         for (Location[] area : map) {

@@ -10,6 +10,7 @@ import com.example.boris.mapgame.MainActivity;
 import com.example.boris.mapgame.R;
 import com.example.boris.mapgame.models.LocationModel;
 import com.example.boris.mapgame.models.Player;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class RecyclerMainAdapter extends RecyclerView.Adapter<RecyclerMainAdapte
         this.mainActivity = mainActivity;
         this.map = map;
 
-        layoutParams = new ConstraintLayout.LayoutParams(200, 200);
+        layoutParams = new ConstraintLayout.LayoutParams(120, 120);
         player = new Player();
     }
 
@@ -52,7 +53,7 @@ public class RecyclerMainAdapter extends RecyclerView.Adapter<RecyclerMainAdapte
             case FOREST:
                 holder.imageView.setImageResource(R.drawable.tree);
                 break;
-            case PIT:
+            case PIT1:
                 holder.imageView.setImageResource(R.drawable.pit);
                 break;
             case EXIT:
@@ -116,8 +117,8 @@ public class RecyclerMainAdapter extends RecyclerView.Adapter<RecyclerMainAdapte
             case FOREST:
                 makeNotification("Forest");
                 break;
-            case PIT:
-                makeNotification("Pit");
+            case PIT1:
+                makeNotification("Pit1");
                 break;
             case EXIT:
                 makeNotification("Exit");
@@ -135,10 +136,6 @@ public class RecyclerMainAdapter extends RecyclerView.Adapter<RecyclerMainAdapte
                 makeNotification("Treasure");
                 break;
         }
-    }
-
-    private void makeNotification(String not) {
-        Toast.makeText(mainActivity, not, Toast.LENGTH_SHORT).show();
     }
 
     public void moveUp() {
@@ -175,5 +172,18 @@ public class RecyclerMainAdapter extends RecyclerView.Adapter<RecyclerMainAdapte
         } else {
             makeNotification("end of map");
         }
+    }
+
+    private void makeNotification(String not) {
+        //Toast.makeText(mainActivity, not, Toast.LENGTH_SHORT).show();
+        Snackbar.make(mainActivity.mainLay, not, Snackbar.LENGTH_INDEFINITE)
+                .setAction("CLOSE", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                    }
+                })
+                .setActionTextColor(mainActivity.getResources().getColor(android.R.color.holo_red_light ))
+                .show();
     }
 }
