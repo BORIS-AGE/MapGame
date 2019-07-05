@@ -4,8 +4,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
+import com.example.boris.mapgame.GameLogic;
 import com.example.boris.mapgame.MainActivity;
 import com.example.boris.mapgame.R;
 import com.example.boris.mapgame.models.LocationModel;
@@ -23,16 +23,16 @@ public class RecyclerMainAdapter extends RecyclerView.Adapter<RecyclerMainAdapte
     private List<LocationModel> locationModels;
     private MainActivity mainActivity;
     private ConstraintLayout.LayoutParams layoutParams;
-    private LocationModel[][] map;
     public Player player;
+    private GameLogic gameLogic;
 
-    public RecyclerMainAdapter(List<LocationModel> locationModels, MainActivity mainActivity) {
+    public RecyclerMainAdapter(List<LocationModel> locationModels, MainActivity mainActivity, GameLogic gameLogic, Player player) {
         this.locationModels = locationModels;
         this.mainActivity = mainActivity;
-        this.map = map;
+        this.gameLogic = gameLogic;
+        this.player = player;
 
         layoutParams = new ConstraintLayout.LayoutParams(120, 120);
-        player = new Player();
     }
 
     @NonNull
@@ -47,7 +47,16 @@ public class RecyclerMainAdapter extends RecyclerView.Adapter<RecyclerMainAdapte
         holder.layout.setLayoutParams(layoutParams);
 
         switch (locationModels.get(position).getLocation()) {
-            case RIVER:
+            case RIVERT:
+                holder.imageView.setImageResource(R.drawable.water);
+                break;
+            case RIVERR:
+                holder.imageView.setImageResource(R.drawable.water);
+                break;
+            case RIVERB:
+                holder.imageView.setImageResource(R.drawable.water);
+                break;
+            case RIVERL:
                 holder.imageView.setImageResource(R.drawable.water);
                 break;
             case FOREST:
@@ -72,13 +81,10 @@ public class RecyclerMainAdapter extends RecyclerView.Adapter<RecyclerMainAdapte
                 holder.imageView.setImageResource(R.drawable.treasure);
                 break;
         }
-
     }
 
     @Override
-    public int getItemCount() {
-        return locationModels.size();
-    }
+    public int getItemCount() { return locationModels.size(); }
 
     public void setNewSize(int size) {
         layoutParams.height = layoutParams.height + size;
@@ -102,88 +108,12 @@ public class RecyclerMainAdapter extends RecyclerView.Adapter<RecyclerMainAdapte
                     if (!player.isOnMap() && locationModels.get(getAdapterPosition()).getLocation() != MainActivity.Location.ROCK) {
                         player.setPosition(getAdapterPosition());
                         player.setOnMap(true);
-                        notifyLocationType(getAdapterPosition());
+                        gameLogic.notifyLocationType(getAdapterPosition(), "");
                     }
                 }
             });
         }
     }
 
-    private void notifyLocationType(int position) {
-        switch (locationModels.get(position).getLocation()) {
-            case RIVER:
-                makeNotification("River");
-                break;
-            case FOREST:
-                makeNotification("Forest");
-                break;
-            case PIT1:
-                makeNotification("Pit1");
-                break;
-            case EXIT:
-                makeNotification("Exit");
-                break;
-            case ROCK:
-                makeNotification("Mountain");
-                break;
-            case SAND:
-                makeNotification("Sand");
-                break;
-            case ARSENAL:
-                makeNotification("Arsenal");
-                break;
-            case TREASURE:
-                makeNotification("Treasure");
-                break;
-        }
-    }
 
-    public void moveUp() {
-        if (player.getPosition() - mainActivity.lenthOfMAp >= 0) {
-            player.setPosition(player.getPosition() - mainActivity.lenthOfMAp);
-            notifyLocationType(player.getPosition());
-        } else {
-            makeNotification("end of map");
-        }
-    }
-
-    public void moveDown() {
-        if (player.getPosition() + mainActivity.lenthOfMAp <= mainActivity.lenthOfMAp * mainActivity.lenthOfMAp) {
-            player.setPosition(player.getPosition() + mainActivity.lenthOfMAp);
-            notifyLocationType(player.getPosition());
-        } else {
-            makeNotification("end of map");
-        }
-    }
-
-    public void moveLeft() {
-        if ((player.getPosition() % 7) - 1 >= 0) {
-            player.setPosition(player.getPosition() - 1);
-            notifyLocationType(player.getPosition());
-        } else {
-            makeNotification("end of map");
-        }
-    }
-
-    public void moveRight() {
-        if ((player.getPosition() % 7) + 1 <= 6) {
-            player.setPosition(player.getPosition() + 1);
-            notifyLocationType(player.getPosition());
-        } else {
-            makeNotification("end of map");
-        }
-    }
-
-    private void makeNotification(String not) {
-        //Toast.makeText(mainActivity, not, Toast.LENGTH_SHORT).show();
-        Snackbar.make(mainActivity.mainLay, not, Snackbar.LENGTH_INDEFINITE)
-                .setAction("CLOSE", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                    }
-                })
-                .setActionTextColor(mainActivity.getResources().getColor(android.R.color.holo_red_light ))
-                .show();
-    }
 }

@@ -16,21 +16,22 @@ import android.widget.Toast;
 
 import com.example.boris.mapgame.adapters.RecyclerMainAdapter;
 import com.example.boris.mapgame.models.LocationModel;
+import com.example.boris.mapgame.models.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    public enum Location{ROCK, FOREST, RIVER, ARSENAL, TREASURE, SAND, EXIT, PIT1, PIT2, PIT3, PIT4, PIT5, PIT6}
+    public enum Location{ROCK, FOREST, RIVERT, RIVERR, RIVERB, RIVERL, ARSENAL, TREASURE, SAND, EXIT, PIT1, PIT2, PIT3, PIT4, PIT5, PIT6}
     public enum Mode{NORMAL, MODE1, MODE2, MODE3}
     public Location[][] map = {
-            {Location.FOREST, Location.FOREST, Location.FOREST, Location.FOREST, Location.SAND, Location.SAND, Location.RIVER},
-            {Location.SAND, Location.SAND, Location.FOREST, Location.SAND, Location.RIVER, Location.RIVER, Location.RIVER},
-            {Location.SAND, Location.FOREST, Location.SAND, Location.SAND, Location.RIVER, Location.SAND, Location.FOREST},
-            {Location.PIT1, Location.SAND, Location.RIVER, Location.RIVER, Location.RIVER, Location.SAND, Location.FOREST},
-            {Location.SAND, Location.SAND, Location.RIVER, Location.TREASURE, Location.ROCK, Location.SAND, Location.ARSENAL},
-            {Location.RIVER, Location.RIVER, Location.RIVER, Location.ROCK, Location.SAND, Location.SAND, Location.FOREST},
-            {Location.RIVER, Location.SAND, Location.SAND, Location.FOREST, Location.FOREST, Location.EXIT, Location.PIT1}
+            {Location.FOREST, Location.FOREST, Location.FOREST, Location.FOREST, Location.SAND, Location.SAND, Location.RIVERT},
+            {Location.SAND, Location.SAND, Location.FOREST, Location.SAND, Location.RIVERR, Location.RIVERR, Location.RIVERT},
+            {Location.SAND, Location.FOREST, Location.SAND, Location.SAND, Location.RIVERT, Location.SAND, Location.FOREST},
+            {Location.PIT1, Location.SAND, Location.RIVERR, Location.RIVERR, Location.RIVERT, Location.SAND, Location.FOREST},
+            {Location.SAND, Location.SAND, Location.RIVERT, Location.TREASURE, Location.ROCK, Location.SAND, Location.ARSENAL},
+            {Location.RIVERR, Location.RIVERR, Location.RIVERT, Location.ROCK, Location.SAND, Location.SAND, Location.FOREST},
+            {Location.RIVERT, Location.SAND, Location.SAND, Location.FOREST, Location.FOREST, Location.EXIT, Location.PIT1}
     };
 
     private ScaleGestureDetector mScaleGestureDetector;
@@ -40,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerMainAdapter recyclerMainAdapter;
     public int lenthOfMAp = 7;
     public ConstraintLayout mainLay;
+    private GameLogic gameLogic;
+    private Player player;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setRecyclerMain() {
         mainRecycler.setLayoutManager(new GridLayoutManager(this, lenthOfMAp));
-        recyclerMainAdapter = new RecyclerMainAdapter(locationModels, this);
+        recyclerMainAdapter = new RecyclerMainAdapter(locationModels, this, gameLogic, player);
         mainRecycler.setHasFixedSize(true);
         mainRecycler.setAdapter(recyclerMainAdapter);
     }
@@ -63,11 +66,14 @@ public class MainActivity extends AppCompatActivity {
         mainLay = findViewById(R.id.mainLayout);
         mainRecycler = findViewById(R.id.mainRecycler);
         locationModels = new ArrayList<>();
+        player = new Player();
         for (Location[] area : map) {
             for (Location l : area){
                 locationModels.add(new LocationModel(l));
             }
         }
+
+        gameLogic = new GameLogic(player, this, locationModels, lenthOfMAp);
     }
     private void setScrollView() {
         //for moving ability
@@ -155,16 +161,16 @@ public class MainActivity extends AppCompatActivity {
         if (recyclerMainAdapter.player.isOnMap())
         switch (view.getId()){
             case R.id.buttonUp:
-                recyclerMainAdapter.moveUp();
+                gameLogic.moveUp();
                 break;
             case R.id.buttonDown:
-                recyclerMainAdapter.moveDown();
+                gameLogic.moveDown();
                 break;
             case R.id.buttonLeft:
-                recyclerMainAdapter.moveLeft();
+                gameLogic.moveLeft();
                 break;
             case R.id.buttonRight:
-                recyclerMainAdapter.moveRight();
+                gameLogic.moveRight();
                 break;
         }
     }
