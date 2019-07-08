@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/ROCK"
+        android:title="rock"/>
+    <item android:id="@+id/FOREST"
+        android:title="forest"/>
+    <item android:id="@+id/RIVER"
+        android:title="river"/>
+    <item android:id="@+id/ARSENAL"
+        android:title="arsenal"/>
+    <item android:id="@+id/TREASURE"
+        android:title="treasure"/>
+    <item android:id="@+id/SAND"
+        android:title="sand"/>
+    <item android:id="@+id/EXIT"
+        android:title="exit"/>
+    <item android:id="@+id/PIT1"
+        android:title="pit1"/>
+    <item android:id="@+id/PIT2"
+        android:title="pit2"/>
+    <item android:id="@+id/PIT3"
+        android:title="pit3"/>
+    <item android:id="@+id/PIT4"
+        android:title="pit4"/>
+    <item android:id="@+id/PIT5"
+        android:title="pit5"/>
+    <item android:id="@+id/PIT6"
+        android:title="pit6"/>
+</menu>
+

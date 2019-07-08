@@ -1,16 +1,17 @@
 package com.example.boris.mapgame.adapters;
 
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 
 import com.example.boris.mapgame.GameLogic;
 import com.example.boris.mapgame.MainActivity;
 import com.example.boris.mapgame.R;
 import com.example.boris.mapgame.models.LocationModel;
 import com.example.boris.mapgame.models.Player;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
@@ -45,42 +46,7 @@ public class RecyclerMainAdapter extends RecyclerView.Adapter<RecyclerMainAdapte
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, int position) {
         holder.layout.setLayoutParams(layoutParams);
-
-        switch (locationModels.get(position).getLocation()) {
-            case RIVERT:
-                holder.imageView.setImageResource(R.drawable.water);
-                break;
-            case RIVERR:
-                holder.imageView.setImageResource(R.drawable.water);
-                break;
-            case RIVERB:
-                holder.imageView.setImageResource(R.drawable.water);
-                break;
-            case RIVERL:
-                holder.imageView.setImageResource(R.drawable.water);
-                break;
-            case FOREST:
-                holder.imageView.setImageResource(R.drawable.tree);
-                break;
-            case PIT1:
-                holder.imageView.setImageResource(R.drawable.pit);
-                break;
-            case EXIT:
-                holder.imageView.setImageResource(R.drawable.exit);
-                break;
-            case ROCK:
-                holder.imageView.setImageResource(R.drawable.mountain);
-                break;
-            case SAND:
-                holder.imageView.setImageResource(R.drawable.sand);
-                break;
-            case ARSENAL:
-                holder.imageView.setImageResource(R.drawable.arsenal);
-                break;
-            case TREASURE:
-                holder.imageView.setImageResource(R.drawable.treasure);
-                break;
-        }
+        gameLogic.setImageView(holder.imageView, position);
     }
 
     @Override
@@ -98,22 +64,29 @@ public class RecyclerMainAdapter extends RecyclerView.Adapter<RecyclerMainAdapte
         public ConstraintLayout layout;
         public ImageView imageView;
 
-        public MyHolder(@NonNull View itemView) {
+        public MyHolder(@NonNull final View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.imageRecyclerItem);
             layout = itemView.findViewById(R.id.recycleItemMain);
-            layout.setOnClickListener(new View.OnClickListener() {
+
+            imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (!player.isOnMap() && locationModels.get(getAdapterPosition()).getLocation() != MainActivity.Location.ROCK) {
+                    if (!player.isOnMap() && locationModels.get(getAdapterPosition()).getLocation() != MainActivity.Location.ROCK){
                         player.setPosition(getAdapterPosition());
                         player.setOnMap(true);
                         gameLogic.notifyLocationType(getAdapterPosition(), "");
+                    }else{
+                        gameLogic.setUpPopupMenuItem(getAdapterPosition(), itemView, imageView);
+                        MenuInflater inflater = gameLogic.getPopupMenu().getMenuInflater();
+                        inflater.inflate(R.menu.select_location_menu, gameLogic.getPopupMenu().getMenu());
+                        gameLogic.getPopupMenu().show();
                     }
                 }
             });
         }
     }
+
 
 
 }

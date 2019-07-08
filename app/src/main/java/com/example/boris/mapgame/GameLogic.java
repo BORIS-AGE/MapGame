@@ -1,6 +1,8 @@
 package com.example.boris.mapgame;
 
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.PopupMenu;
 
 import com.example.boris.mapgame.models.LocationModel;
 import com.example.boris.mapgame.models.Player;
@@ -13,13 +15,16 @@ public class GameLogic {
     private Player player;
     private MainActivity mainActivity;
     private List<LocationModel> locationModels;
-    int widthOfMap;
+    private int widthOfMap;
+    public List<LocationModel> usersMap;
+    private PopupMenu popupMenu;
 
-    public GameLogic(Player player, MainActivity mainActivity, List<LocationModel> locationModels, int widthOfMap) {
+    public GameLogic(Player player, MainActivity mainActivity, List<LocationModel> locationModels, List<LocationModel> usersMap, int widthOfMap) {
         this.player = player;
         this.mainActivity = mainActivity;
         this.locationModels = locationModels;
         this.widthOfMap = widthOfMap;
+        this.usersMap = usersMap;
     }
 
     public void notifyLocationType(int position, String additional) {
@@ -232,7 +237,7 @@ public class GameLogic {
 
     private void makeNotification(String not) {
         //Toast.makeText(mainActivity, not, Toast.LENGTH_SHORT).show();
-        Snackbar.make(mainActivity.mainLay, not + player.getPosition(), Snackbar.LENGTH_INDEFINITE)
+        Snackbar.make(mainActivity.mainLay, not, Snackbar.LENGTH_INDEFINITE)
                 .setAction("close", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -241,5 +246,96 @@ public class GameLogic {
                 })
                 .setActionTextColor(mainActivity.getResources().getColor(android.R.color.holo_red_light))
                 .show();
+    }
+
+    public void setUpPopupMenuItem(int position, View itemView, ImageView imageView){
+        popupMenu = new PopupMenu(mainActivity, itemView);
+        popupMenu.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()){
+                case R.id.RIVER:
+                    usersMap.set(position, new LocationModel(MainActivity.Location.RIVERB));
+                    break;
+                case R.id.ROCK:
+                    usersMap.set(position, new LocationModel(MainActivity.Location.ROCK));
+                    break;
+                case R.id.FOREST:
+                    usersMap.set(position, new LocationModel(MainActivity.Location.FOREST));
+                    break;
+                case R.id.ARSENAL:
+                    usersMap.set(position, new LocationModel(MainActivity.Location.ARSENAL));
+                    break;
+                case R.id.TREASURE:
+                    usersMap.set(position, new LocationModel(MainActivity.Location.TREASURE));
+                    break;
+                case R.id.SAND:
+                    usersMap.set(position, new LocationModel(MainActivity.Location.SAND));
+                    break;
+                case R.id.EXIT:
+                    usersMap.set(position, new LocationModel(MainActivity.Location.EXIT));
+                    break;
+                case R.id.PIT1:
+                    usersMap.set(position, new LocationModel(MainActivity.Location.PIT1));
+                    break;
+                case R.id.PIT2:
+                    usersMap.set(position, new LocationModel(MainActivity.Location.PIT2));
+                    break;
+                case R.id.PIT3:
+                    usersMap.set(position, new LocationModel(MainActivity.Location.PIT3));
+                    break;
+                case R.id.PIT4:
+                    usersMap.set(position, new LocationModel(MainActivity.Location.PIT4));
+                    break;
+                case R.id.PIT5:
+                    usersMap.set(position, new LocationModel(MainActivity.Location.PIT5));
+                    break;
+                case R.id.PIT6:
+                    usersMap.set(position, new LocationModel(MainActivity.Location.PIT6));
+                    break;
+            }
+            setImageView(imageView, position);
+            return true;
+        });
+    }
+
+    public PopupMenu getPopupMenu() {
+        return popupMenu;
+    }
+
+    public void setImageView(ImageView imageView, int position){
+        switch (usersMap.get(position).getLocation()) {
+            case RIVERT:
+                imageView.setImageResource(R.drawable.water);
+                break;
+            case RIVERR:
+                imageView.setImageResource(R.drawable.water);
+                break;
+            case RIVERB:
+                imageView.setImageResource(R.drawable.water);
+                break;
+            case RIVERL:
+                imageView.setImageResource(R.drawable.water);
+                break;
+            case FOREST:
+                imageView.setImageResource(R.drawable.tree);
+                break;
+            case PIT1:
+                imageView.setImageResource(R.drawable.pit);
+                break;
+            case EXIT:
+                imageView.setImageResource(R.drawable.exit);
+                break;
+            case ROCK:
+                imageView.setImageResource(R.drawable.mountain);
+                break;
+            case SAND:
+                imageView.setImageResource(R.drawable.sand);
+                break;
+            case ARSENAL:
+                imageView.setImageResource(R.drawable.arsenal);
+                break;
+            case TREASURE:
+                imageView.setImageResource(R.drawable.treasure);
+                break;
+        }
     }
 }

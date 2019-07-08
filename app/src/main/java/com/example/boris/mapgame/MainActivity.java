@@ -34,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
             {Location.RIVERT, Location.SAND, Location.SAND, Location.FOREST, Location.FOREST, Location.EXIT, Location.PIT1}
     };
 
+    private List<LocationModel> usersMap;
+
     private ScaleGestureDetector mScaleGestureDetector;
     private GestureDetector gestureDetector;
     private RecyclerView mainRecycler;
@@ -66,14 +68,18 @@ public class MainActivity extends AppCompatActivity {
         mainLay = findViewById(R.id.mainLayout);
         mainRecycler = findViewById(R.id.mainRecycler);
         locationModels = new ArrayList<>();
+        usersMap = new ArrayList<>();
         player = new Player();
         for (Location[] area : map) {
             for (Location l : area){
                 locationModels.add(new LocationModel(l));
             }
         }
+        for (int i = 0; i < lenthOfMAp * lenthOfMAp; i++) {
+            usersMap.add(new LocationModel(Location.SAND));
+        }
 
-        gameLogic = new GameLogic(player, this, locationModels, lenthOfMAp);
+        gameLogic = new GameLogic(player, this, locationModels, usersMap, lenthOfMAp);
     }
     private void setScrollView() {
         //for moving ability
