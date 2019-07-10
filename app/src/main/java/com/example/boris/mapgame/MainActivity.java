@@ -70,7 +70,14 @@ public class MainActivity extends AppCompatActivity {
         player = ViewModelProviders.of(this).get(Player.class);
         for (Location[] area : map) {
             for (Location l : area){
-                locationModels.add(new LocationModel(l));
+                LocationModel locationModel = new LocationModel(l);
+                if (l == Location.TREASURE){
+                    locationModel.setHasTopWall(true);
+                    locationModel.setHasBotWall(true);
+                    locationModel.setHasLeftWall(true);
+                    locationModel.setHasRightWall(true);
+                }
+                locationModels.add(locationModel);
             }
         }
 
