@@ -134,6 +134,7 @@ public class GameLogic {
                     if (i != currentPosition && locationModels.get(i).getLocation() == MainActivity.Location.PIT2) {
                         player.setPosition(i);
                         makeNotification("you have fallen into pit1 and gone out from another side of pit 2");
+                        break;
                     }
                 }
                 break;
@@ -142,9 +143,9 @@ public class GameLogic {
                     if (i != currentPosition && locationModels.get(i).getLocation() == MainActivity.Location.PIT3) {
                         player.setPosition(i);
                         makeNotification("you have fallen into pit2 and gone out from another side of pit3");
+                        break;
                     }
                 }
-                break;
             case PIT3:
                 for (int i = 0; i < locationModels.size(); i++) {
                     if (i != currentPosition && locationModels.get(i).getLocation() == MainActivity.Location.PIT4) {
@@ -159,7 +160,7 @@ public class GameLogic {
                         makeNotification("you have fallen into pit3 and gone out from another side of pit1");
                         break;
                     }
-                }
+                }break;
             case PIT4:
                 for (int i = 0; i < locationModels.size(); i++) {
                     if (i != currentPosition && locationModels.get(i).getLocation() == MainActivity.Location.PIT5) {
@@ -174,7 +175,7 @@ public class GameLogic {
                         makeNotification("you have fallen into pit4 and gone out from another side of pit1");
                         break;
                     }
-                }
+                }break;
             case PIT5:
                 for (int i = 0; i < locationModels.size(); i++) {
                     if (i != currentPosition && locationModels.get(i).getLocation() == MainActivity.Location.PIT6) {
@@ -189,7 +190,7 @@ public class GameLogic {
                         makeNotification("you have fallen into pit5 and gone out from another side of pit1");
                         break;
                     }
-                }
+                }break;
             case PIT6:
                 for (int i = 0; i < locationModels.size(); i++) {
                     if (i != currentPosition && locationModels.get(i).getLocation() == MainActivity.Location.PIT1) {
@@ -197,7 +198,7 @@ public class GameLogic {
                         makeNotification("you have fallen into pit6 and gone out from another side of pit1");
                         break;
                     }
-                }
+                }break;
                 //other
             case FOREST:
                 if (player.hasBomb() || player.hasGun()) {
@@ -211,7 +212,7 @@ public class GameLogic {
                 if (player.hasTreasure())
                     makeNotification("You win!!!!!!!");
                 else
-                    makeNotification("Exit (find treasure to win)");
+                    makeNotification("Exit (find treasure and come back)");
                 break;
             case ROCK:
                 makeNotification("Mountain");
@@ -319,6 +320,21 @@ public class GameLogic {
                 imageView.setImageResource(R.drawable.tree);
                 break;
             case PIT1:
+                imageView.setImageResource(R.drawable.pit);
+                break;
+            case PIT2:
+                imageView.setImageResource(R.drawable.pit);
+                break;
+            case PIT3:
+                imageView.setImageResource(R.drawable.pit);
+                break;
+            case PIT4:
+                imageView.setImageResource(R.drawable.pit);
+                break;
+            case PIT5:
+                imageView.setImageResource(R.drawable.pit);
+                break;
+            case PIT6:
                 imageView.setImageResource(R.drawable.pit);
                 break;
             case EXIT:

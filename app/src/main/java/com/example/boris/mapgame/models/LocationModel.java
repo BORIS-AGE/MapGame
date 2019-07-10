@@ -2,12 +2,19 @@ package com.example.boris.mapgame.models;
 
 import com.example.boris.mapgame.MainActivity;
 
+import androidx.lifecycle.ViewModel;
+
 //rock, wall, forest(loose arsenal), river, pit, bomb(arsenal + pistol), treasure, sand(can shoot through sand and lose 1 step and treasure), exit
 public class LocationModel {
     private MainActivity.Location location;
     private MainActivity.Mode mode = MainActivity.Mode.NORMAL;
 
     public LocationModel(MainActivity.Location location) {
+        this.location = location;
+    }
+    public LocationModel() {}
+
+    public void setLocation(MainActivity.Location location) {
         this.location = location;
     }
 

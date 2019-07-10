@@ -1,8 +1,20 @@
 package com.example.boris.mapgame.models;
 
-public class Player {
+import com.example.boris.mapgame.MainActivity;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import androidx.lifecycle.ViewModel;
+
+public class Player extends ViewModel {
+    public List<LocationModel> usersMap = new ArrayList<>();
     private int position;
     private boolean hasGun = false, hasBomb = false, hasTreasure = false, onMap = false;
+
+    public Player(){
+        clearUserMap(MainActivity.lenthOfMAp);
+    }
 
     public int getPosition() {
         return position;
@@ -42,5 +54,12 @@ public class Player {
 
     public void setOnMap(boolean onMap) {
         this.onMap = onMap;
+    }
+
+    public void clearUserMap(int lenthOfMAp){
+        usersMap.clear();
+        for (int i = 0; i < lenthOfMAp * lenthOfMAp; i++) {
+            usersMap.add(new LocationModel(MainActivity.Location.SAND));
+        }
     }
 }
