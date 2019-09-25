@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/topWall"
+        android:title="top wall"/>
+    <item android:id="@+id/botWall"
+        android:title="bot wall"/>
+    <item android:id="@+id/leftWall"
+        android:title="left wall"/>
+    <item android:id="@+id/rightWall"
+        android:title="right wall"/>
+</menu>

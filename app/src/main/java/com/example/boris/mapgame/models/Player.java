@@ -59,7 +59,7 @@ public class Player extends ViewModel {
     public void clearUserMap(int lenthOfMAp){
         usersMap.clear();
         for (int i = 0; i < lenthOfMAp * lenthOfMAp; i++) {
-            usersMap.add(new LocationModel(MainActivity.Location.SAND));
+            usersMap.add(new LocationModel(MainActivity.Location.DEFAULT));
         }
     }
 }

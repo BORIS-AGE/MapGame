@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -23,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    public enum Location{ROCK, FOREST, RIVERT, RIVERR, RIVERB, RIVERL, ARSENAL, TREASURE, SAND, EXIT, PIT1, PIT2, PIT3, PIT4, PIT5, PIT6}
+    public enum Location{ROCK, FOREST, RIVERT, RIVERR, RIVERB, RIVERL, ARSENAL, TREASURE, SAND, EXIT, PIT1, PIT2, PIT3, PIT4, PIT5, PIT6, DEFAULT}
     public enum Mode{NORMAL, MODE1, MODE2, MODE3}
     public Location[][] map = {
             {Location.FOREST, Location.FOREST, Location.PIT3, Location.FOREST, Location.SAND, Location.SAND, Location.RIVERT},
@@ -40,10 +41,11 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mainRecycler;
     private List<LocationModel> locationModels;
     private RecyclerMainAdapter recyclerMainAdapter;
-    public static final int lenthOfMAp = 7;
     public ConstraintLayout mainLay;
     private GameLogic gameLogic;
     private Player player;
+    public static final int lenthOfMAp = 7;
+    public int phoneWidth = Resources.getSystem().getDisplayMetrics().widthPixels, phoneHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

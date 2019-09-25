@@ -33,7 +33,14 @@ public class RecyclerMainAdapter extends RecyclerView.Adapter<RecyclerMainAdapte
         this.gameLogic = gameLogic;
         this.player = player;
 
-        layoutParams = new ConstraintLayout.LayoutParams(120, 120);
+        layoutParams = new ConstraintLayout.LayoutParams(mainActivity.phoneWidth / mainActivity.lenthOfMAp + 1, mainActivity.phoneWidth / mainActivity.lenthOfMAp + 1);
+    }
+
+    public void setNewSize(int size) {
+        layoutParams.height = layoutParams.height + size;
+        layoutParams.width = layoutParams.width + size;
+
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -52,14 +59,6 @@ public class RecyclerMainAdapter extends RecyclerView.Adapter<RecyclerMainAdapte
     @Override
     public int getItemCount() { return locationModels.size(); }
 
-    public void setNewSize(int size) {
-        layoutParams.height = layoutParams.height + size;
-        layoutParams.width = layoutParams.width + size;
-
-
-        notifyDataSetChanged();
-    }
-
     public class MyHolder extends RecyclerView.ViewHolder {
         public ConstraintLayout layout;
         public ImageView imageView;
@@ -77,13 +76,26 @@ public class RecyclerMainAdapter extends RecyclerView.Adapter<RecyclerMainAdapte
                         player.setOnMap(true);
                         gameLogic.notifyLocationType(getAdapterPosition(), "");
                     }else{
-                        gameLogic.setUpPopupMenuItem(getAdapterPosition(), itemView, imageView);
-                        MenuInflater inflater = gameLogic.getPopupMenu().getMenuInflater();
-                        inflater.inflate(R.menu.select_location_menu, gameLogic.getPopupMenu().getMenu());
-                        gameLogic.getPopupMenu().show();
+                        PopupMenu popupMenu = gameLogic.setUpPopupMenuItem(getAdapterPosition(), itemView, imageView);
+                        MenuInflater inflater = popupMenu.getMenuInflater();
+                        inflater.inflate(R.menu.select_location_menu, popupMenu.getMenu());
+                        popupMenu.show();
                     }
                 }
             });
+
+            /*imageView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if(player.isOnMap()){
+                        PopupMenu popupMenu = gameLogic.setUpPopupMenuWalls(getAdapterPosition(), itemView, imageView);
+                        MenuInflater inflater = popupMenu.getMenuInflater();
+                        inflater.inflate(R.menu.select_wall_menu, popupMenu.getMenu());
+                        popupMenu.show();
+                    }
+                    return true;
+                }
+            });*/
         }
     }
 

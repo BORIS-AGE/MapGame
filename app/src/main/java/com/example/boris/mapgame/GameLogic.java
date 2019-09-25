@@ -1,5 +1,13 @@
 package com.example.boris.mapgame;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.drawable.BitmapDrawable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
@@ -16,8 +24,7 @@ public class GameLogic {
     private MainActivity mainActivity;
     private List<LocationModel> locationModels;
     private int widthOfMap;
-    public List<LocationModel> usersMap;
-    private PopupMenu popupMenu;
+    private List<LocationModel> usersMap;
 
     public GameLogic(Player player, MainActivity mainActivity, List<LocationModel> locationModels, List<LocationModel> usersMap, int widthOfMap) {
         this.player = player;
@@ -67,15 +74,15 @@ public class GameLogic {
 
     public void moveUp() {
         if (player.getPosition() - widthOfMap >= 0) {
-            if (!locationModels.get(player.getPosition()).hasTopWall() && !locationModels.get(player.getPosition()  - mainActivity.lenthOfMAp).hasBotWall()){
+            if (!locationModels.get(player.getPosition()).hasTopWall() && !locationModels.get(player.getPosition() - mainActivity.lenthOfMAp).hasBotWall()) {
                 player.setPosition(player.getPosition() - widthOfMap);
                 performPlayerMove(player.getPosition());
-            }else{
+            } else {
                 if (player.hasBomb()) {
                     locationModels.get(player.getPosition()).setHasTopWall(false);
                     locationModels.get(player.getPosition() - widthOfMap).setHasBotWall(false);
                     makeNotification("you have destroyed the wall");
-                }else
+                } else
                     makeNotification("can't move because of wall");
             }
         } else {
@@ -88,12 +95,12 @@ public class GameLogic {
             if (!locationModels.get(player.getPosition()).hasBotWall() && !locationModels.get(player.getPosition() + widthOfMap).hasTopWall()) {
                 player.setPosition(player.getPosition() + widthOfMap);
                 performPlayerMove(player.getPosition());
-            }else{
+            } else {
                 if (player.hasBomb()) {
                     locationModels.get(player.getPosition()).setHasBotWall(false);
                     locationModels.get(player.getPosition() + widthOfMap).setHasTopWall(false);
                     makeNotification("you have destroyed the wall");
-                }else
+                } else
                     makeNotification("can't move because of wall");
             }
         } else {
@@ -106,12 +113,12 @@ public class GameLogic {
             if (!locationModels.get(player.getPosition()).hasLeftWall() && !locationModels.get(player.getPosition() - 1).hasRightWall()) {
                 player.setPosition(player.getPosition() - 1);
                 performPlayerMove(player.getPosition());
-            }else{
+            } else {
                 if (player.hasBomb()) {
                     locationModels.get(player.getPosition()).setHasLeftWall(false);
                     locationModels.get(player.getPosition() - 1).setHasRightWall(false);
                     makeNotification("you have destroyed the wall");
-                }else
+                } else
                     makeNotification("can't move because of wall");
             }
         } else {
@@ -124,13 +131,13 @@ public class GameLogic {
             if (!locationModels.get(player.getPosition()).hasRightWall() && !locationModels.get(player.getPosition() + 1).hasLeftWall()) {
                 player.setPosition(player.getPosition() + 1);
                 performPlayerMove(player.getPosition());
-            }else{
+            } else {
                 if (player.hasBomb()) {
                     locationModels.get(player.getPosition()).setHasRightWall(false);
                     locationModels.get(player.getPosition() + 1).setHasLeftWall(false);
                     makeNotification("you have destroyed the wall");
-                }else
-                makeNotification("can't move because of wall");
+                } else
+                    makeNotification("can't move because of wall");
             }
         } else {
             makeNotification("end of map");
@@ -196,7 +203,8 @@ public class GameLogic {
                         makeNotification("you have fallen into pit3 and gone out from another side of pit1");
                         break;
                     }
-                }break;
+                }
+                break;
             case PIT4:
                 for (int i = 0; i < locationModels.size(); i++) {
                     if (i != currentPosition && locationModels.get(i).getLocation() == MainActivity.Location.PIT5) {
@@ -211,7 +219,8 @@ public class GameLogic {
                         makeNotification("you have fallen into pit4 and gone out from another side of pit1");
                         break;
                     }
-                }break;
+                }
+                break;
             case PIT5:
                 for (int i = 0; i < locationModels.size(); i++) {
                     if (i != currentPosition && locationModels.get(i).getLocation() == MainActivity.Location.PIT6) {
@@ -226,7 +235,8 @@ public class GameLogic {
                         makeNotification("you have fallen into pit5 and gone out from another side of pit1");
                         break;
                     }
-                }break;
+                }
+                break;
             case PIT6:
                 for (int i = 0; i < locationModels.size(); i++) {
                     if (i != currentPosition && locationModels.get(i).getLocation() == MainActivity.Location.PIT1) {
@@ -234,8 +244,9 @@ public class GameLogic {
                         makeNotification("you have fallen into pit6 and gone out from another side of pit1");
                         break;
                     }
-                }break;
-                //other
+                }
+                break;
+            //other
             case FOREST:
                 if (player.hasBomb() || player.hasGun()) {
                     player.setHasBomb(false);
@@ -254,11 +265,11 @@ public class GameLogic {
                 makeNotification("Mountain");
                 break;
             case SAND:
-                if (player.hasTreasure()){
+                if (player.hasTreasure()) {
                     player.setHasTreasure(false);
                     makeNotification("Sand (you have lost your treasure)");
-                }else
-                makeNotification("Sand");
+                } else
+                    makeNotification("Sand");
                 break;
             case ARSENAL:
                 player.setHasGun(true);
@@ -284,10 +295,10 @@ public class GameLogic {
                 .show();
     }
 
-    public void setUpPopupMenuItem(int position, View itemView, ImageView imageView){
-        popupMenu = new PopupMenu(mainActivity, itemView);
+    public PopupMenu setUpPopupMenuItem(int position, View itemView, ImageView imageView) {
+        PopupMenu popupMenu = new PopupMenu(mainActivity, itemView);
         popupMenu.setOnMenuItemClickListener(item -> {
-            switch (item.getItemId()){
+            switch (item.getItemId()) {
                 case R.id.RIVER:
                     usersMap.set(position, new LocationModel(MainActivity.Location.RIVERB));
                     break;
@@ -331,14 +342,34 @@ public class GameLogic {
             setImageView(imageView, position);
             return true;
         });
-    }
-
-    public PopupMenu getPopupMenu() {
         return popupMenu;
     }
 
-    public void setImageView(ImageView imageView, int position){
-        switch (locationModels.get(position).getLocation()) {
+    /*public PopupMenu setUpPopupMenuWalls(int position, View itemView, ImageView imageView) {
+        PopupMenu popupMenu = new PopupMenu(mainActivity, itemView);
+        popupMenu.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.topWall:
+                    usersMap.get(position).setHasTopWall(true);
+                    break;
+                case R.id.botWall:
+                    usersMap.get(position).setHasBotWall(true);
+                    break;
+                case R.id.leftWall:
+                    usersMap.get(position).setHasLeftWall(true);
+                    break;
+                case R.id.rightWall:
+                    usersMap.get(position).setHasRightWall(true);
+                    break;
+            }
+
+            return true;
+        });
+        return popupMenu;
+    }*/
+
+    public void setImageView(ImageView imageView, int position) {
+        switch (usersMap.get(position).getLocation()) {
             case RIVERT:
                 imageView.setImageResource(R.drawable.water);
                 break;
@@ -387,6 +418,11 @@ public class GameLogic {
             case TREASURE:
                 imageView.setImageResource(R.drawable.treasure);
                 break;
+            case DEFAULT:
+                imageView.setImageResource(R.drawable.unknown);
+                break;
         }
+
     }
+
 }
