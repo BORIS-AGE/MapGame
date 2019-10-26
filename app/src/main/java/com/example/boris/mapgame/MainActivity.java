@@ -1,11 +1,5 @@
 package com.example.boris.mapgame;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.GestureDetector;
@@ -16,36 +10,48 @@ import android.widget.HorizontalScrollView;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.boris.mapgame.adapters.RecyclerMainAdapter;
-import com.example.boris.mapgame.models.LocationModel;
+import com.example.boris.mapgame.models.Arsenal;
+import com.example.boris.mapgame.models.Exit;
+import com.example.boris.mapgame.models.Forest;
+import com.example.boris.mapgame.models.Location;
+import com.example.boris.mapgame.models.Location.LocationType;
+import com.example.boris.mapgame.models.Mountain;
+import com.example.boris.mapgame.models.Pit;
 import com.example.boris.mapgame.models.Player;
+import com.example.boris.mapgame.models.River;
+import com.example.boris.mapgame.models.Sand;
+import com.example.boris.mapgame.models.Treasure;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    public enum Location{ROCK, FOREST, RIVERT, RIVERR, RIVERB, RIVERL, ARSENAL, TREASURE, SAND, EXIT, PIT1, PIT2, PIT3, PIT4, PIT5, PIT6, DEFAULT}
-    public enum Mode{NORMAL, MODE1, MODE2, MODE3}
+    public static final int lenthOfMAp = 7;
     public Location[][] map = {
-            {Location.FOREST, Location.FOREST, Location.PIT3, Location.FOREST, Location.SAND, Location.SAND, Location.RIVERT},
-            {Location.SAND, Location.SAND, Location.FOREST, Location.SAND, Location.RIVERR, Location.RIVERR, Location.RIVERT},
-            {Location.SAND, Location.FOREST, Location.SAND, Location.SAND, Location.RIVERT, Location.SAND, Location.FOREST},
-            {Location.PIT1, Location.SAND, Location.RIVERR, Location.RIVERR, Location.RIVERT, Location.SAND, Location.FOREST},
-            {Location.SAND, Location.SAND, Location.RIVERT, Location.TREASURE, Location.ROCK, Location.SAND, Location.ARSENAL},
-            {Location.RIVERR, Location.RIVERR, Location.RIVERT, Location.ROCK, Location.SAND, Location.SAND, Location.FOREST},
-            {Location.RIVERT, Location.SAND, Location.SAND, Location.FOREST, Location.FOREST, Location.EXIT, Location.PIT2}
+            {new Forest(),          new Forest(),           new Pit(1),         new Forest(),           new Sand(),             new Sand(),             new River(River.TOP)},
+            {new Sand(),            new Sand(),             new Forest(),           new Sand(),             new River(River.RIGHT), new River(River.RIGHT), new River(River.TOP)},
+            {new Sand(),            new Forest(),           new Sand(),             new Sand(),             new River(River.TOP),   new Sand(),             new Forest()},
+            {new Pit(2),        new Sand(),             new River(River.RIGHT), new River(River.RIGHT), new River(River.TOP),   new Sand(),             new Forest()},
+            {new Sand(),            new Sand(),             new River(River.TOP),   new Treasure(),         new Mountain(),         new Sand(),             new Arsenal()},
+            {new River(River.RIGHT),new River(River.RIGHT), new River(River.TOP),   new Mountain(),         new Sand(),             new Sand(),             new Forest()},
+            {new River(River.TOP),  new Sand(),             new Sand(),             new Forest(),           new Forest(),           new Exit(),             new Pit(3)}
     };
-
+    public ConstraintLayout mainLay;
+    public int phoneWidth = Resources.getSystem().getDisplayMetrics().widthPixels, phoneHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
     private ScaleGestureDetector mScaleGestureDetector;
     private GestureDetector gestureDetector;
     private RecyclerView mainRecycler;
-    private List<LocationModel> locationModels;
+    private List<Location> locations;
     private RecyclerMainAdapter recyclerMainAdapter;
-    public ConstraintLayout mainLay;
     private GameLogic gameLogic;
     private Player player;
-    public static final int lenthOfMAp = 7;
-    public int phoneWidth = Resources.getSystem().getDisplayMetrics().widthPixels, phoneHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,34 +63,34 @@ public class MainActivity extends AppCompatActivity {
         setRecyclerMain();
     }
 
-
     private void setRecyclerMain() {
         mainRecycler.setLayoutManager(new GridLayoutManager(this, lenthOfMAp));
-        recyclerMainAdapter = new RecyclerMainAdapter(locationModels, this, gameLogic, player);
+        recyclerMainAdapter = new RecyclerMainAdapter(this, gameLogic, player);
         mainRecycler.setHasFixedSize(true);
         mainRecycler.setAdapter(recyclerMainAdapter);
     }
 
-    private void setDefaults(){
+    private void setDefaults() {
         mainLay = findViewById(R.id.mainLayout);
         mainRecycler = findViewById(R.id.mainRecycler);
-        locationModels = new ArrayList<>();
+        locations = new ArrayList<>();
         player = ViewModelProviders.of(this).get(Player.class);
+        player.setDefaults(this, locations);
         for (Location[] area : map) {
-            for (Location l : area){
-                LocationModel locationModel = new LocationModel(l);
-                if (l == Location.TREASURE){
-                    locationModel.setHasTopWall(true);
-                    locationModel.setHasBotWall(true);
-                    locationModel.setHasLeftWall(true);
-                    locationModel.setHasRightWall(true);
+            for (Location l : area) {
+                if (l.getType() == LocationType.TREASURE) {
+                    l.setHasTopWall(true);
+                    l.setHasBotWall(true);
+                    l.setHasLeftWall(true);
+                    l.setHasRightWall(true);
                 }
-                locationModels.add(locationModel);
+                locations.add(l);
             }
         }
 
-        gameLogic = new GameLogic(player, this, locationModels, player.usersMap, lenthOfMAp);
+        gameLogic = new GameLogic(player, this);
     }
+
     private void setScrollView() {
         //for moving ability
         final HorizontalScrollView hScroll = findViewById(R.id.scrollHorizontal);
@@ -162,26 +168,28 @@ public class MainActivity extends AppCompatActivity {
         return gestureDetector.onTouchEvent(event);
     }
 
-    public void makeErrorNotification(String exception){
+    public void makeErrorNotification(String exception) {
         System.out.println(exception);
         Toast.makeText(getApplicationContext(), exception, Toast.LENGTH_SHORT).show();
     }
 
     public void playerMove(View view) {
         if (recyclerMainAdapter.player.isOnMap())
-        switch (view.getId()){
-            case R.id.buttonUp:
-                gameLogic.moveUp();
-                break;
-            case R.id.buttonDown:
-                gameLogic.moveDown();
-                break;
-            case R.id.buttonLeft:
-                gameLogic.moveLeft();
-                break;
-            case R.id.buttonRight:
-                gameLogic.moveRight();
-                break;
-        }
+            switch (view.getId()) {
+                case R.id.buttonUp:
+                    gameLogic.moveUp();
+                    break;
+                case R.id.buttonDown:
+                    gameLogic.moveDown();
+                    break;
+                case R.id.buttonLeft:
+                    gameLogic.moveLeft();
+                    break;
+                case R.id.buttonRight:
+                    gameLogic.moveRight();
+                    break;
+            }
     }
+
+    public enum Mode {NORMAL, MODE1, MODE2, MODE3}
 }

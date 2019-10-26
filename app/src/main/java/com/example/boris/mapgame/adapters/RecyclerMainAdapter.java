@@ -10,7 +10,7 @@ import android.widget.PopupMenu;
 import com.example.boris.mapgame.GameLogic;
 import com.example.boris.mapgame.MainActivity;
 import com.example.boris.mapgame.R;
-import com.example.boris.mapgame.models.LocationModel;
+import com.example.boris.mapgame.models.Location;
 import com.example.boris.mapgame.models.Player;
 
 import java.util.List;
@@ -21,14 +21,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class RecyclerMainAdapter extends RecyclerView.Adapter<RecyclerMainAdapter.MyHolder> {
 
-    private List<LocationModel> locationModels;
     private MainActivity mainActivity;
     private ConstraintLayout.LayoutParams layoutParams;
     public Player player;
     private GameLogic gameLogic;
 
-    public RecyclerMainAdapter(List<LocationModel> locationModels, MainActivity mainActivity, GameLogic gameLogic, Player player) {
-        this.locationModels = locationModels;
+    public RecyclerMainAdapter(MainActivity mainActivity, GameLogic gameLogic, Player player) {
         this.mainActivity = mainActivity;
         this.gameLogic = gameLogic;
         this.player = player;
@@ -57,7 +55,7 @@ public class RecyclerMainAdapter extends RecyclerView.Adapter<RecyclerMainAdapte
     }
 
     @Override
-    public int getItemCount() { return locationModels.size(); }
+    public int getItemCount() { return MainActivity.lenthOfMAp * MainActivity.lenthOfMAp; }
 
     public class MyHolder extends RecyclerView.ViewHolder {
         public ConstraintLayout layout;
@@ -71,10 +69,10 @@ public class RecyclerMainAdapter extends RecyclerView.Adapter<RecyclerMainAdapte
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (!player.isOnMap() && locationModels.get(getAdapterPosition()).getLocation() != MainActivity.Location.ROCK){
+                    if (!player.isOnMap() && player.getMap().get(getAdapterPosition()).getType() != Location.LocationType.ROCK){
                         player.setPosition(getAdapterPosition());
                         player.setOnMap(true);
-                        gameLogic.notifyLocationType(getAdapterPosition(), "");
+                        player.makeNotification(getAdapterPosition() + "");
                     }else{
                         PopupMenu popupMenu = gameLogic.setUpPopupMenuItem(getAdapterPosition(), itemView, imageView);
                         MenuInflater inflater = popupMenu.getMenuInflater();

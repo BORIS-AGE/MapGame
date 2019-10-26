@@ -1,29 +1,24 @@
 package com.example.boris.mapgame.models;
 
-import com.example.boris.mapgame.MainActivity;
+import android.widget.ImageView;
 
-import androidx.lifecycle.ViewModel;
+public abstract class Location {
+    public enum LocationType{ROCK, FOREST, RIVER, ARSENAL, TREASURE, SAND, EXIT, PIT, DEFAULT}
 
-//rock, wall, forest(loose arsenal), river, pit, bomb(arsenal + pistol), treasure, sand(can shoot through sand and lose 1 step and treasure), exit
-public class LocationModel {
-    private MainActivity.Location location;
-    private MainActivity.Mode mode = MainActivity.Mode.NORMAL;
+    private String name;
+    private LocationType type;
     private boolean hasTopWall, hasBotWall, hasRightWall, hasLeftWall;
 
-    public LocationModel(MainActivity.Location location) {
-        this.location = location;
+    abstract public void standPlayer(Player player);
+
+    abstract public void setImageView(ImageView imageView);
+
+    void setLocationName(String name){
+        this.name = name;
     }
 
-    public MainActivity.Location getLocation() {
-        return location;
-    }
-
-    public MainActivity.Mode getMode() {
-        return mode;
-    }
-
-    public void setMode(MainActivity.Mode mode) {
-        this.mode = mode;
+    public void setType(LocationType type) {
+        this.type = type;
     }
 
     public boolean hasTopWall() {
@@ -56,5 +51,9 @@ public class LocationModel {
 
     public void setHasLeftWall(boolean hasLeftWall) {
         this.hasLeftWall = hasLeftWall;
+    }
+
+    public LocationType getType() {
+        return type;
     }
 }
