@@ -1,5 +1,6 @@
 package com.example.boris.mapgame;
 
+import android.annotation.SuppressLint;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.GestureDetector;
@@ -8,7 +9,6 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.ScrollView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -34,6 +34,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     public static final int lenthOfMAp = 7;
+    // can be replaced with LocationFactory.get{locationName}() but there is no matter
     public Location[][] map = {
             {new Forest(),          new Forest(),           new Pit(1),         new Forest(),           new Sand(),             new Sand(),             new River(River.TOP)},
             {new Sand(),            new Sand(),             new Forest(),           new Sand(),             new River(River.RIGHT), new River(River.RIGHT), new River(River.TOP)},
@@ -44,11 +45,10 @@ public class MainActivity extends AppCompatActivity {
             {new River(River.TOP),  new Sand(),             new Sand(),             new Forest(),           new Forest(),           new Exit(),             new Pit(3)}
     };
     public ConstraintLayout mainLay;
-    public int phoneWidth = Resources.getSystem().getDisplayMetrics().widthPixels, phoneHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
+    public int phoneWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
     private ScaleGestureDetector mScaleGestureDetector;
     private GestureDetector gestureDetector;
     private RecyclerView mainRecycler;
-    private List<Location> locations;
     private RecyclerMainAdapter recyclerMainAdapter;
     private GameLogic gameLogic;
     private Player player;
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
     private void setDefaults() {
         mainLay = findViewById(R.id.mainLayout);
         mainRecycler = findViewById(R.id.mainRecycler);
-        locations = new ArrayList<>();
+        List<Location> locations = new ArrayList<>();
         player = ViewModelProviders.of(this).get(Player.class);
         player.setDefaults(this, locations);
         for (Location[] area : map) {
@@ -91,16 +91,12 @@ public class MainActivity extends AppCompatActivity {
         gameLogic = new GameLogic(player, this);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void setScrollView() {
         //for moving ability
         final HorizontalScrollView hScroll = findViewById(R.id.scrollHorizontal);
         final ScrollView vScroll = findViewById(R.id.scrollVertical);
-        vScroll.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return false;
-            }
-        });
+        vScroll.setOnTouchListener((v, event) -> false);
         hScroll.setOnTouchListener(new View.OnTouchListener() { //outer scroll listener
             private float mx, my, curX, curY;
             private boolean started = false;
@@ -168,11 +164,6 @@ public class MainActivity extends AppCompatActivity {
         return gestureDetector.onTouchEvent(event);
     }
 
-    public void makeErrorNotification(String exception) {
-        System.out.println(exception);
-        Toast.makeText(getApplicationContext(), exception, Toast.LENGTH_SHORT).show();
-    }
-
     public void playerMove(View view) {
         if (recyclerMainAdapter.player.isOnMap())
             switch (view.getId()) {
@@ -190,6 +181,4 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
     }
-
-    public enum Mode {NORMAL, MODE1, MODE2, MODE3}
 }

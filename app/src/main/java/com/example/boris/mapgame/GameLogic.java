@@ -19,58 +19,20 @@ public class GameLogic {
     private Player player;
     private MainActivity mainActivity;
 
-    public GameLogic(Player player, MainActivity mainActivity) {
+    GameLogic(Player player, MainActivity mainActivity) {
         this.player = player;
         this.mainActivity = mainActivity;
     }
 
-    /*public void notifyLocationType(int position, String additional) {
-        switch (player.getMap().get(position).getLocation()) {
-            case RIVERT:
-                player.makeNotification("River" + additional);
-                break;
-            case RIVERR:
-                player.makeNotification("River" + additional);
-                break;
-            case RIVERB:
-                player.makeNotification("River" + additional);
-                break;
-            case RIVERL:
-                player.makeNotification("River" + additional);
-                break;
-            case FOREST:
-                player.makeNotification("Forest" + additional);
-                break;
-            case PIT1:
-                player.makeNotification("Pit1" + additional);
-                break;
-            case EXIT:
-                player.makeNotification("Exit" + additional);
-                break;
-            case ROCK:
-                player.makeNotification("Mountain" + additional);
-                break;
-            case SAND:
-                player.makeNotification("Sand" + additional);
-                break;
-            case ARSENAL:
-                player.makeNotification("Arsenal" + additional);
-                break;
-            case TREASURE:
-                player.makeNotification("Treasure" + additional);
-                break;
-        }
-    }*/
-
-    public void moveUp() {
-        if (player.getPosition() - mainActivity.lenthOfMAp >= 0) { 
-            if (!player.getMap().get(player.getPosition()).hasTopWall() && !player.getMap().get(player.getPosition() - mainActivity.lenthOfMAp).hasBotWall()) {
-                player.setPosition(player.getPosition() - mainActivity.lenthOfMAp);
+    void moveUp() {
+        if (player.getPosition() - MainActivity.lenthOfMAp >= 0) {
+            if (!player.getMap().get(player.getPosition()).hasTopWall() && !player.getMap().get(player.getPosition() - MainActivity.lenthOfMAp).hasBotWall()) {
+                player.setPosition(player.getPosition() - MainActivity.lenthOfMAp);
                 performPlayerMove();
             } else {
                 if (player.hasBomb()) {
                     player.getMap().get(player.getPosition()).setHasTopWall(false);
-                    player.getMap().get(player.getPosition() - mainActivity.lenthOfMAp).setHasBotWall(false);
+                    player.getMap().get(player.getPosition() - MainActivity.lenthOfMAp).setHasBotWall(false);
                     player.makeNotification("you have destroyed the wall");
                 } else
                     player.makeNotification("can't move because of wall");
@@ -80,15 +42,15 @@ public class GameLogic {
         }
     }
 
-    public void moveDown() {
-        if (player.getPosition() + mainActivity.lenthOfMAp <= mainActivity.lenthOfMAp * mainActivity.lenthOfMAp) {
-            if (!player.getMap().get(player.getPosition()).hasBotWall() && !player.getMap().get(player.getPosition() + mainActivity.lenthOfMAp).hasTopWall()) {
-                player.setPosition(player.getPosition() + mainActivity.lenthOfMAp);
+    void moveDown() {
+        if (player.getPosition() + MainActivity.lenthOfMAp <= MainActivity.lenthOfMAp * MainActivity.lenthOfMAp) {
+            if (!player.getMap().get(player.getPosition()).hasBotWall() && !player.getMap().get(player.getPosition() + MainActivity.lenthOfMAp).hasTopWall()) {
+                player.setPosition(player.getPosition() + MainActivity.lenthOfMAp);
                 performPlayerMove();
             } else {
                 if (player.hasBomb()) {
                     player.getMap().get(player.getPosition()).setHasBotWall(false);
-                    player.getMap().get(player.getPosition() + mainActivity.lenthOfMAp).setHasTopWall(false);
+                    player.getMap().get(player.getPosition() + MainActivity.lenthOfMAp).setHasTopWall(false);
                     player.makeNotification("you have destroyed the wall");
                 } else
                     player.makeNotification("can't move because of wall");
@@ -98,7 +60,7 @@ public class GameLogic {
         }
     }
 
-    public void moveLeft() {
+    void moveLeft() {
         if ((player.getPosition() % 7) - 1 >= 0) {
             if (!player.getMap().get(player.getPosition()).hasLeftWall() && !player.getMap().get(player.getPosition() - 1).hasRightWall()) {
                 player.setPosition(player.getPosition() - 1);
@@ -116,7 +78,7 @@ public class GameLogic {
         }
     }
 
-    public void moveRight() {
+    void moveRight() {
         if ((player.getPosition() % 7) + 1 <= 6) {
             if (!player.getMap().get(player.getPosition()).hasRightWall() && !player.getMap().get(player.getPosition() + 1).hasLeftWall()) {
                 player.setPosition(player.getPosition() + 1);
@@ -137,7 +99,6 @@ public class GameLogic {
     private void performPlayerMove() {
         player.getMap().get(player.getPosition()).standPlayer(player);
     }
-
 
     public PopupMenu setUpPopupMenuItem(int position, View itemView, ImageView imageView) {
         PopupMenu popupMenu = new PopupMenu(mainActivity, itemView); 
