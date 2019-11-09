@@ -61,7 +61,7 @@ public class GameLogic {
     }
 
     void moveLeft() {
-        if ((player.getPosition() % 7) - 1 >= 0) {
+        if ((player.getPosition() % MainActivity.lenthOfMAp) - 1 >= 0) {
             if (!player.getMap().get(player.getPosition()).hasLeftWall() && !player.getMap().get(player.getPosition() - 1).hasRightWall()) {
                 player.setPosition(player.getPosition() - 1);
                 performPlayerMove();
@@ -79,7 +79,7 @@ public class GameLogic {
     }
 
     void moveRight() {
-        if ((player.getPosition() % 7) + 1 <= 6) {
+        if ((player.getPosition() % MainActivity.lenthOfMAp) + 1 <= MainActivity.lenthOfMAp - 1) {
             if (!player.getMap().get(player.getPosition()).hasRightWall() && !player.getMap().get(player.getPosition() + 1).hasLeftWall()) {
                 player.setPosition(player.getPosition() + 1);
                 performPlayerMove();
